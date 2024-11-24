@@ -8,24 +8,16 @@ from pycocotools import mask as coco_mask
 
 class HeartSegmentationDataset(torch.utils.data.Dataset):
     def __init__(self, json_path, images_dir, transform=None):
-        """
-        Args:
-            json_path (str): Path to COCO JSON file.
-            images_dir (str): Path to directory containing images.
-            transform (callable, optional): Transformations to apply to images and masks.
-        """
         self.images_dir = images_dir
         self.transform = transform
-
         with open(json_path, 'r') as f:
             self.coco_data = json.load(f)
-
         self.image_info = {img['id']: img for img in self.coco_data['images']}
         self.annotations = self._organize_annotations(self.coco_data['annotations'])
 
     def _organize_annotations(self, annotations):
         organized_annotations = {}
-        for ann in tqdm(annotations, desc = "Organize annotations"):
+        for ann in tqdm(annotations, desc="Organize annotations"):
             image_id = ann['image_id']
             if image_id not in organized_annotations:
                 organized_annotations[image_id] = []
@@ -44,22 +36,27 @@ class HeartSegmentationDataset(torch.utils.data.Dataset):
         return len(self.image_info)
 
     def __getitem__(self, idx):
+        # Get image info
         image_id = list(self.image_info.keys())[idx]
         image_info = self.image_info[image_id]
+        
+        # Load image
         image_path = os.path.join(self.images_dir, image_info['file_name'])
-
-        image = Image.open(image_path).convert("RGB")
+        image = np.array(Image.open(image_path).convert("RGB"))
+        
+        # Generate mask
         image_size = (image_info['height'], image_info['width'])
-
         annotations = self.annotations.get(image_id, [])
         mask = self._generate_mask(annotations, image_size)
 
+        # Apply transforms
         if self.transform:
-            augmented = self.transform(image=np.array(image), mask=mask)
-            image = augmented['image']
-            mask = augmented['mask']
-
-        image = torch.tensor(image, dtype=torch.float32).permute(2, 0, 1) / 255.0
-        mask = torch.tensor(mask, dtype=torch.float32)
-
+            transformed = self.transform(image=image, mask=mask)
+            image = transformed['image']  # This should now be a tensor thanks to ToTensorV2
+            mask = transformed['mask']    # This should now be a tensor thanks to ToTensorV2
+            return image, mask.float()  # Ensure mask is float type
+        
+        # If no transforms, convert to tensor manually (though this shouldn't happen with your setup)
+        image = torch.from_numpy(image).permute(2, 0, 1).float() / 255.0
+        mask = torch.from_numpy(mask).float()
         return image, mask
