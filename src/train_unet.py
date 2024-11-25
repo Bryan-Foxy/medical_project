@@ -166,7 +166,7 @@ if __name__ == "__main__":
     
     batch_size = 8
     learning_rate = 2e-4
-    num_epochs = 50
+    num_epochs = 80
     device = get_device()
     
     # Load data
