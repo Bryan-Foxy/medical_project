@@ -12,16 +12,25 @@ class HeartSegmentationDataset(torch.utils.data.Dataset):
         self.transform = transform
         with open(json_path, 'r') as f:
             self.coco_data = json.load(f)
+        
+        # Filter categories to include only 'heart'
+        self.heart_category_id = next(
+            cat['id'] for cat in self.coco_data['categories'] if cat['name'] == 'heart'
+        )
+        
         self.image_info = {img['id']: img for img in self.coco_data['images']}
         self.annotations = self._organize_annotations(self.coco_data['annotations'])
 
     def _organize_annotations(self, annotations):
+        """Organize and filter annotations for the 'heart' category only."""
         organized_annotations = {}
         for ann in tqdm(annotations, desc="Organize annotations"):
-            image_id = ann['image_id']
-            if image_id not in organized_annotations:
-                organized_annotations[image_id] = []
-            organized_annotations[image_id].append(ann)
+            # Keep only 'heart' annotations
+            if ann['category_id'] == self.heart_category_id:
+                image_id = ann['image_id']
+                if image_id not in organized_annotations:
+                    organized_annotations[image_id] = []
+                organized_annotations[image_id].append(ann)
         return organized_annotations
 
     def _generate_mask(self, annotations, image_size):
@@ -52,11 +61,11 @@ class HeartSegmentationDataset(torch.utils.data.Dataset):
         # Apply transforms
         if self.transform:
             transformed = self.transform(image=image, mask=mask)
-            image = transformed['image']  # This should now be a tensor thanks to ToTensorV2
-            mask = transformed['mask']    # This should now be a tensor thanks to ToTensorV2
-            return image, mask.float()  # Ensure mask is float type
+            image = transformed['image']  # Tensor format thanks to ToTensorV2
+            mask = transformed['mask']    # Ensure mask is float tensor
+            return image, mask.float()  # Return image and mask tensors
         
-        # If no transforms, convert to tensor manually (though this shouldn't happen with your setup)
+        # If no transforms, convert to tensor manually
         image = torch.from_numpy(image).permute(2, 0, 1).float() / 255.0
         mask = torch.from_numpy(mask).float()
         return image, mask

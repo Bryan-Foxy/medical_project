@@ -1,7 +1,7 @@
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
-def get_train_transforms(height=384, width=384):
+def get_train_transforms(height=224, width=224):
     """
     Augmentation pipeline for training.
     Includes a variety of augmentations to improve generalization.
@@ -38,7 +38,7 @@ def get_train_transforms(height=384, width=384):
         ToTensorV2(),
     ], additional_targets={'mask': 'mask'})
 
-def get_validation_transforms(height=384, width=384):
+def get_validation_transforms(height=224, width=224):
     """
     Augmentation pipeline for validation.
     Keeps transformations simple and consistent.

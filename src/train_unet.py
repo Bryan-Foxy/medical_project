@@ -4,7 +4,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Librairies
 import torch
-import numpy as np
 import segmentation_models_pytorch as smp
 from tqdm import tqdm
 from src.utils.tools import get_device, plot_losses
@@ -34,7 +33,7 @@ def load_data(train_json_path, train_images_dir, val_json_path, val_images_dir, 
         batch_size=batch_size, 
         shuffle=True,
         pin_memory=True if device != "cpu" else False,
-        num_workers=0 if device == "mps" else 2  # MPS doesn't work well with multiple workers
+        num_workers=0 if device == "mps" else 2
     )
     
     val_loader = torch.utils.data.DataLoader(
@@ -159,14 +158,14 @@ def validate_model(model, val_loader, criterion):
 
 if __name__ == "__main__":
     # Paths and hyperparameters
-    train_json_path = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/processed datas/veterinary_heart_vert_detection/train/_annotations.coco.json"
-    train_images_dir = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/processed datas/veterinary_heart_vert_detection/train"
-    val_json_path = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/processed datas/veterinary_heart_vert_detection/valid/_annotations.coco.json"
-    val_images_dir = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/processed datas/veterinary_heart_vert_detection/valid"
+    train_json_path = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/processed datas/veterinary_heart_vert_detection.v1i.coco/train/_annotations.coco.json"
+    train_images_dir = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/processed datas/veterinary_heart_vert_detection.v1i.coco/train"
+    val_json_path = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/processed datas/veterinary_heart_vert_detection.v1i.coco/valid/_annotations.coco.json"
+    val_images_dir = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/processed datas/veterinary_heart_vert_detection.v1i.coco/valid"
     
-    batch_size = 8
+    batch_size = 16
     learning_rate = 2e-4
-    num_epochs = 80
+    num_epochs = 100
     device = get_device()
     
     # Load data
