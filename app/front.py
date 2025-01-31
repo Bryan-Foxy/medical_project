@@ -41,8 +41,10 @@ class FrontEnd(tk.Tk):
         self.info_text.pack(pady = 10)
         self.no_info_text = tk.Label(self.frame_info, text = "No image selected", wraplength = 200, bg = "lightgray")
         self.no_info_text.pack(pady = 10)
-        self.b1 = ttk.Button(self.frame_info, text = "Download the report")
+        self.b1 = ttk.Button(self.frame_info, text = "AI Prediction VHS")
         self.b1.pack(pady = 20)
+        self.b2 = ttk.Button(self.frame_info, text = "Download the report")
+        self.b2.pack(pady = 30)
     
     def _load_images_list(self):
         images = get_list_images()
