@@ -162,7 +162,7 @@ class VHS:
                         bbox_inches='tight')
             plt.show()
 
-        return vhs_score
+        return (major_diameter, count_major), (minor_diameter, count_minor), vhs_score
 
 
 # Example usage

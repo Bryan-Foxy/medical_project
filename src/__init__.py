@@ -1,0 +1,1 @@
+from .vhs import VHS
