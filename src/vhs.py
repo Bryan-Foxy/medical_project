@@ -1,7 +1,11 @@
+import sys
+import os
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(project_root)
+from config import IMAGES_OUTPUT
 import cv2
 import numpy as np
 import tensorflow as tf
-import matplotlib.pyplot as plt
 from ultralytics import YOLO
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 
@@ -125,13 +129,12 @@ class VHS:
         count_minor = superpose_diameter(minor_diameter, vertebra_lengths)
         return count_major, count_minor
 
-    def perform_vhs(self, scale_factor=0.3528, visualize=False):
+    def perform_vhs(self, scale_factor=0.3528):
         """
         Perform the full VHS calculation and optionally visualize the results.
 
         Parameters:
         - scale_factor (float): Scale factor for converting pixel distances to real-world measurements (default 0.3528).
-        - visualize (bool): Whether to show a visualization of the results (default False).
 
         Returns:
         - vhs_score (float): The calculated VHS score.
@@ -147,30 +150,27 @@ class VHS:
         count_major, count_minor = self.calculate_vhs(major_diameter, minor_diameter, vertebra_lengths)
         vhs_score = count_major + count_minor
 
-        if visualize:
-            # Visualization
-            fig, ax = plt.subplots(figsize=(10, 10))
-            ax.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
-            ax.plot([major_p1[0], major_p2[0]], [major_p1[1], major_p2[1]], color='white')
-            ax.plot([minor_p1[0], minor_p2[0]], [minor_p1[1], minor_p2[1]], color='white')
-            ax.text((major_p1[0] + major_p2[0]) / 2, (major_p1[1] + major_p2[1]) / 2, f'{major_diameter:.1f} mm', color='white', fontsize=8, ha='right', va='top')
-            ax.text((minor_p1[0] + minor_p2[0]) / 2, (minor_p1[1] + minor_p2[1]) / 2, f'{minor_diameter:.1f} mm', color='white', fontsize=8, ha='left', va='bottom')
-            ax.text(120, 350, f'IB = {count_major} + {count_minor} = {vhs_score:.1f}', color = 'white', fontsize = 10)
-            plt.title(f"VHS: {vhs_score:.1f}")
-            plt.savefig("/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/Project/saves/images/outputs/final_output.png",
-                        dpi = 300,
-                        bbox_inches='tight')
-            plt.show()
+        # Convert to int for the vizu
+        major_p1 = (int(major_p1[0]), int(major_p1[1]))
+        major_p2 = (int(major_p2[0]), int(major_p2[1]))
+        minor_p1 = (int(minor_p1[0]), int(minor_p1[1]))
+        minor_p2 = (int(minor_p2[0]), int(minor_p2[1]))
 
-        return (major_diameter, count_major), (minor_diameter, count_minor), vhs_score
-
-
-# Example usage
-if __name__ == '__main__':
-    vhs = VHS(
-        image_path="/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/processed datas/veterinary_heart_vert_detection.v1i.coco/valid/I0000186_jpeg.rf.ab0635c243302439a5705fbc83d950a2.jpg",
-        model_heart="/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/models/heart_segmentation_model.h5",
-        model_vertebrae="/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/Project/saves/yolo_logs/weights/best.pt"
-    )
-    score = vhs.perform_vhs(visualize=True)
-    print(f"VHS Score: {score:.1f}")
+        # Visualization
+        output_name = f"{os.path.splitext(os.path.basename(self.image_path))[0]}.png"
+        output_path = os.path.join(IMAGES_OUTPUT, output_name)
+        image = cv2.imread(self.image_path)
+        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        cv2.arrowedLine(image_rgb, tuple(major_p1), tuple(major_p2), (255, 255, 255), 2, tipLength=0.05)
+        cv2.arrowedLine(image_rgb, tuple(minor_p1), tuple(minor_p2), (255, 255, 255), 2, tipLength=0.05)
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        major_text_position = ((major_p1[0] + major_p2[0]) // 2, (major_p1[1] + major_p2[1]) // 2)
+        minor_text_position = ((minor_p1[0] + minor_p2[0]) // 2, (minor_p1[1] + minor_p2[1]) // 2)
+        cv2.putText(image_rgb, f'{major_diameter:.1f} mm', major_text_position, font, 0.6, (255, 255, 255), 2, cv2.LINE_AA)
+        cv2.putText(image_rgb, f'{minor_diameter:.1f} mm', minor_text_position, font, 0.6, (255, 255, 255), 2, cv2.LINE_AA)
+        vhs_score_text = f'IB = {count_major} + {count_minor} = {vhs_score:.1f}'
+        cv2.putText(image_rgb, vhs_score_text, (50, 50), font, 0.8, (255, 255, 255), 2, cv2.LINE_AA)
+        vhs_title_text = f"VHS: {vhs_score:.1f}"
+        cv2.putText(image_rgb, vhs_title_text, (50, 100), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
+        cv2.imwrite(output_path, cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR))
+        return (round(major_diameter, 2), count_major), (round(minor_diameter,2), count_minor), vhs_score, output_path

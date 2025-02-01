@@ -1,12 +1,9 @@
-import sys
 import os
 import ollama
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
 from reportlab.lib import colors
-from src.vhs import VHS
-from config import HEART_MODEL_PATH, VERTEBRAE_MODEL_PATH
 
 # Diagnostic Class
 class Diagnostic:
@@ -21,6 +18,7 @@ class Diagnostic:
         Major Diameter: {major}
         Minor Diameter: {minor}
         VHS Score: {vhs_score}
+        The major diameter and the minor are tuples containing (value in millimeters, transposition to the vertebrae)
         
         Please return only the expert interpretation in a clear and professional manner.
         """
@@ -46,8 +44,8 @@ class Diagnostic:
             Paragraph(f"<b>Species:</b> Dog/Cat", styles["Normal"]),
             Spacer(1, 12),
             Paragraph("<b>VHS Measurements:</b>", styles["Heading2"]),
-            Paragraph(f"- Major Diameter: {self.major} cm", styles["Normal"]),
-            Paragraph(f"- Minor Diameter: {self.minor} cm", styles["Normal"]),
+            Paragraph(f"- Major Diameter: {self.major} mm", styles["Normal"]),
+            Paragraph(f"- Minor Diameter: {self.minor} mm", styles["Normal"]),
             Paragraph(f"- VHS Score: {self.vhs_score}", styles["Normal"]),
             Spacer(1, 12),
             Paragraph("<b>Interpretation:</b>", styles["Heading2"]),
@@ -58,8 +56,8 @@ class Diagnostic:
         ]
 
         # Load images
-        img_original = Image(img_path, width=250, height=250)
-        img_predicted = Image(predicted_path, width=250, height=250)
+        img_original = Image(img_path, width=200, height=200)
+        img_predicted = Image(predicted_path, width=200, height=200)
 
         # Align images side by side
         image_table = Table([[img_original, img_predicted]])

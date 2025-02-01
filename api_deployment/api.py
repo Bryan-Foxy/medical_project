@@ -18,12 +18,15 @@ def vhs():
         return jsonify({'error': 'No file provided'}), 400
 
     file = request.files['file']
+    original_filename = file.filename
+    base_name, _ = os.path.splitext(original_filename)
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_file:
-        file.save(temp_file.name)
-        temp_path = temp_file.name
+        temp_file_path = f"{temp_file.name}_{base_name}.jpg"  
+        file.save(temp_file_path)
+        temp_path = temp_file_path
 
-    major, minor, vhs_score = VHS(
+    major, minor, vhs_score, output_path = VHS(
         image_path=temp_path,
         model_heart=HEART_MODEL_PATH,
         model_vertebrae=VERTEBRAE_MODEL_PATH
@@ -33,6 +36,7 @@ def vhs():
         'major': major,
         'minor': minor,
         'vhs_score': vhs_score,
+        'output_path': output_path,
         'image_path': temp_path
     })
 
@@ -48,7 +52,7 @@ def report():
     minor = data["minor"]
     vhs_score = data["vhs_score"]
     image_path = data["image_path"]
-    predicted_image_path = "predicted.jpg"
+    predicted_image_path = data["output_path"]
 
     # Generate the report
     diagnostic = Diagnostic(major, minor, vhs_score)
