@@ -5,6 +5,6 @@
 - NGUEMO ATTONZE Aymard
 - Harold GEUMTCHENG
 
-**Teacher**: Ms Anudhar Kar
+**Teacher**: Ms Anuradhar Kar
 
 # DOCUMENTATION SOON !
