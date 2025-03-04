@@ -2,7 +2,7 @@
 
 **Members group:**
 - FOZAME ENDEZOUMOU Armand Bryan
-- NGUEMO ATTONZE Aymard
+- NGUEMO ATONMEZE Aymard
 - Harold GEUMTCHENG
 
 **Teacher**: Ms Anuradhar Kar
