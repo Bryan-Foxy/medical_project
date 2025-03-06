@@ -14,8 +14,8 @@ Our project aims to develop an AI system capable of accurately performing the Ve
 
 <img src="saves/images/inputs/vhs-explained.jpg" alt="Figure1" width="40%" />
 
-## Datas
-About our datas, we manage dicom format on animal x-rays principally dogs and cats. You can open to have an overview of the image by using pydicom library, a python package or just find online viewer or local viewer like **Bee DICOM Viewer** on MacOS (Figure 2).
+## Data
+About our data, we manage dicom format on animal x-rays principally dogs and cats. You can open to have an overview of the image by using pydicom library, a python package or just find online viewer or local viewer like **Bee DICOM Viewer** on MacOS (Figure 2).
 
 <img src="saves/images/inputs/image_xiaosaiviewer.png" alt = "Figure2" width="50%" />
 
@@ -27,7 +27,7 @@ pip install -r requirements.txt
 ```
 
 ## Our Solution
-Our solution is splitted in 2 several parts:
+Our solution is splitted into several parts:
 
 ### Computer Vision parts
 We developed two models after performing manual annotations using Roboflow. The first model was designed to segment the animal’s heart, while the second model was trained to detect vertebrae, starting with a specific vertebra that serves as a reference point for measuring the long heart diameter.
@@ -66,7 +66,7 @@ We used Flask to develop an API and built a front-end application to enhance use
 
 
 ## Discussion
-The project is not yet fully completed. We have results that we can present, but further benchmarking and evaluation of our solution are needed. Additionally, optimizing and refining our code will also be considered.
+The project is not yet fully completed. We have results that we can present, but further benchmarking and evaluation of our svolution are needed. Additionally, optimizing and refining our code will also be considered.
 
 Let us know if you have any questions.
 
