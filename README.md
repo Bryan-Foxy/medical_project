@@ -5,9 +5,9 @@
 **Members group:**
 - FOZAME ENDEZOUMOU Armand Bryan
 - NGUEMO ATONMEZE Aymard
-- Harold GUEMTCHENG
+- Harold GEUMTCHENG
 
-**Teacher**: Ms Anudhar Kar
+**Teacher**: Ms Anuradha Kar
 
 ## Intro
 Our project aims to develop an AI system capable of accurately performing the Vertebral Heart Size (VHS) assessment on animal X-rays (Figure 1). VHS is a standardized metric that normalizes heart size relative to body size, using mid-thoracic vertebrae as reference units. This research is particularly exciting as it integrates multiple advanced techniques to ensure precise and reliable results. The AI system we are building is designed to significantly enhance the efficiency of VHS assessments, enabling veterinarians and experts to save valuable time while improving diagnostic accuracy.
