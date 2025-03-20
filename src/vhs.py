@@ -172,5 +172,5 @@ class VHS:
         cv2.putText(image_rgb, vhs_score_text, (50, 50), font, 0.8, (255, 255, 255), 2, cv2.LINE_AA)
         vhs_title_text = f"VHS: {vhs_score:.1f}"
         cv2.putText(image_rgb, vhs_title_text, (50, 100), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
-        cv2.imwrite(output_path, cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR))
+        #cv2.imwrite(output_path, cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR))
         return (round(major_diameter, 2), count_major), (round(minor_diameter,2), count_minor), vhs_score, output_path
