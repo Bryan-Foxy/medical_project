@@ -9,10 +9,12 @@ We will perform MAE and MSE.
 """
 
 import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-from vhs import VHS
+from src.vhs import VHS
 
 # Load the data
 class Evaluator:
@@ -97,14 +99,14 @@ class Evaluator:
         mae = np.mean(np.abs(gt_dict["vhs_score"] - pred_dict["vhs_score"]))
         print("VHS evaluation results:")
         print("="*40)
-        print(f"Mean Squared Error -> {mse}")
-        print(f"Mean Absolute Error -> {mae}")
+        print(f"-> Mean Squared Error:{mse}")
+        print(f"-> Mean Absolute Error:{mae}")
 
 if __name__ == "__main__":
     model_heart = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/project/models/heart_segmentation_model.h5"
     model_vertebrae = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/project/models/vertebrae_yolo.pt"
     csv_path = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/project/datas/VERTEBRAE_HEART_SCALES_ANNOTATIONS_MT.xlsx"
-    data_path = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/project/datas/test"
+    data_path = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/project/datas/valid"
     evaluator = Evaluator(model_heart = model_heart, model_vertebrae = model_vertebrae)
     evaluator.evaluate(csv_path = csv_path, data_path = data_path)
 
