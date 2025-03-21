@@ -16,8 +16,9 @@ def residual_plot(gt, pred):
     plt.axhline(y=0, color='r', linestyle='-')
     plt.xlabel("True Values")
     plt.ylabel("Residuals")
-    plt.show()
     plt.savefig(f"{Config.IMAGES_OUTPUT}/residual_plot.png", dpi=300)
+    plt.show()
+    
 
 def plot_errors(y_true, y_pred):
     """ Plot the distribution of the absolute errors. """
@@ -26,5 +27,5 @@ def plot_errors(y_true, y_pred):
     plt.xlabel("Absolute error")
     plt.ylabel("Frequencies")
     plt.title("Distribution of absolute errors")
+    plt.savefig(f"{Config.IMAGES_OUTPUT}/residual_plot.png", dpi=300)
     plt.show()
-    plt.savefig(f"{Config.IMAGES_OUTPUT}/error_distribution.png", dpi=300)
