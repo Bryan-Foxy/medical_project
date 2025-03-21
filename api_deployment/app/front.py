@@ -5,7 +5,7 @@ from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 import requests
 from file_manager import get_list_images
-from config import IMAGES_DIR, API_URL, IMAGES_OUTPUT
+from config import Config
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(project_root)
@@ -63,7 +63,7 @@ class FrontEnd(tk.Tk):
         selection = self.listbox.curselection()
         if selection:
             img_name = self.listbox.get(selection[0])
-            img_path = os.path.join(IMAGES_DIR, img_name)
+            img_path = os.path.join(Config.IMAGES_DIR, img_name)
             self.selected_image = img_path
             self.display_img(img_path)
             self.no_info_text.config(text=f"File: {img_name}\nSize: {os.path.getsize(img_path)//1024} KB")
@@ -81,7 +81,7 @@ class FrontEnd(tk.Tk):
             messagebox.showerror("Error", "No image selected.")
             return
         
-        url = f"{API_URL}/vhs"
+        url = f"{Config.API_URL}/vhs"
         with open(self.selected_image, "rb") as img_file:
             response = requests.post(url, files={"file": img_file})
         
@@ -125,11 +125,11 @@ class FrontEnd(tk.Tk):
             messagebox.showerror("Error", "No VHS data available.")
             return
 
-        url = f"{API_URL}/report"
+        url = f"{Config.API_URL}/report"
         response = requests.post(url, json=self.vhs_results)
 
         if response.status_code == 200:
-            pdf_path = os.path.join(IMAGES_OUTPUT, "VHS_Report.pdf")
+            pdf_path = os.path.join(Config.IMAGES_OUTPUT, "VHS_Report.pdf")
             with open(pdf_path, "wb") as pdf_file:
                 pdf_file.write(response.content)
             messagebox.showinfo("Success", f"Report downloaded:\n{pdf_path}")

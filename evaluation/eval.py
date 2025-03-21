@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from src.vhs import VHS
+from visualization import plot_errors
 
 # Load the data
 class Evaluator:
@@ -101,6 +102,7 @@ class Evaluator:
         print("="*40)
         print(f"-> Mean Squared Error:{mse}")
         print(f"-> Mean Absolute Error:{mae}")
+        plot_errors(gt_dict["vhs_score"], pred_dict["vhs_score"])
 
 if __name__ == "__main__":
     model_heart = "/Users/armandbryan/Documents/aivancity/PGE5/Medical AI/project/models/heart_segmentation_model.h5"

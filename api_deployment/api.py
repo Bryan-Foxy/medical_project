@@ -6,7 +6,7 @@ import tempfile
 from flask import Flask, request, jsonify, send_file
 from src.vhs import VHS
 from src.llm import Diagnostic
-from config import HEART_MODEL_PATH, VERTEBRAE_MODEL_PATH
+from config import Config
 
 
 app = Flask(__name__)
@@ -28,8 +28,8 @@ def vhs():
 
     major, minor, vhs_score, output_path = VHS(
         image_path=temp_path,
-        model_heart=HEART_MODEL_PATH,
-        model_vertebrae=VERTEBRAE_MODEL_PATH
+        model_heart=Config.HEART_MODEL_PATH,
+        model_vertebrae=Config.VERTEBRAE_MODEL_PATH
     ).perform_vhs()
 
     return jsonify({
